@@ -1,7 +1,8 @@
+import type { IFormData } from '../pages/login/login';
 import api from './axios';
 
 // --- Auth ---
-export const loginAPI = (credentials: { email: string; password: string }) =>
+export const loginAPI = (credentials: IFormData) =>
   api.post('/auth/login', { ...credentials, expiresInMins: 60 });
 
 export const getUserAPI = () =>

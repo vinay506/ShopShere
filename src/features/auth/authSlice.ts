@@ -1,9 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { loginAPI } from '../../api/endPoints';
+import type { IFormData } from '../../pages/login/login';
 
 const loginThunk = createAsyncThunk(
   'auth/login',
-    async (credentials: { email: string; password: string }, { rejectWithValue }) => {
+    async (credentials: IFormData, { rejectWithValue }) => {
     const response =    await loginAPI(credentials);
     if (response.status === 200) {
         const { token, ...user } = response.data;
@@ -16,6 +17,12 @@ const loginThunk = createAsyncThunk(
 
   }
 );
+
+const logoutThunk = createAsyncThunk('auth/logout', async () => {
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+});
+
 
 interface User { 
   id: string;
@@ -60,9 +67,14 @@ const authSlice = createSlice({
         state.user = null;
         state.token = '';
         state.isAuthenticated = false;
+      })
+      .addCase(logoutThunk.fulfilled, (state) => {
+        state.user = null;
+        state.token = '';
+         state.isAuthenticated = false;
       });
   }
 });
 
-export { loginThunk as login };
+export { loginThunk, logoutThunk };
 export default authSlice.reducer;

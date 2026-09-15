@@ -1,17 +1,22 @@
 import { NavLink } from "react-router-dom"
+import { useAuth } from "../../hooks/useAuth";
+import { Button } from "@mui/material";
+
+type AuthType = ReturnType<typeof useAuth>;
+
 const Menu = () => {
+  const auth = useAuth();
   return (
     <>
-      <AuthPages />
-      <UnAuthPages />
+      {auth.isAuthenticated && <AuthPages auth={auth} />}
+      {!auth.isAuthenticated && <UnAuthPages />}
     </>
   )
 }
 
 export default Menu;
 
-const AuthPages = () => {
-
+const AuthPages = ({ auth }: { auth: AuthType }) => {
     return (
         <ul className="flex items-center justify-center space-x-4">
           <li>
@@ -19,6 +24,9 @@ const AuthPages = () => {
           </li>
           <li>
             <NavLink className={({ isActive }) => `bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 ${isActive ? 'bg-blue-600' : ''}`} to="/carts">Carts</NavLink>
+          </li>
+          <li>
+              <Button type="button"  className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600" onClick={auth.logout}>Logout</Button>
           </li>
         </ul>
     )
