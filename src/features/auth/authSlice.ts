@@ -34,17 +34,26 @@ interface User {
   image: string;
 }
 
+export const LoadingType = {
+  IDLE: 'idle',
+  LOADING: 'loading',
+  SUCCESS: 'succeeded',
+  FAILED: 'failed',
+} as const;
+
+export type LoadingTypeValue = typeof LoadingType[keyof typeof LoadingType];
+
 interface AuthState {
   user: User | null;
   isAuthenticated: boolean;
   token: string;
-  loading: 'idle' | 'loading' | 'succeeded' | 'failed'  ;
+  loading: LoadingTypeValue;
 };
 const initialState: AuthState = {
   user: null,
   isAuthenticated: false,
   token: '',
-  loading:'idle'
+  loading:LoadingType.IDLE
 };
 
 const authSlice = createSlice({
