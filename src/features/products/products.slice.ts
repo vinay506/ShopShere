@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 
 export const FETCH_PRODUCTS = 'Products/fetchProducts';
+export const FETCH_MORE_PRODUCTS = 'Products/fetchMoreProducts';
 
 export interface IProduct {
     id: number;
@@ -58,6 +59,15 @@ const ProductSlice = createSlice({
         fetchProductsFailure: (state, action) => {
             state.loading = false;
             state.error = action.payload;
+        },
+        appendProductsSuccess: (state, action) => {
+            state.loading = false;
+            state.products = [...state.products, ...action.payload.products];
+            state.total = action.payload.total;
+            state.error = null;
+        },
+        incrementPage: (state) => {
+            state.filters.page += 1;
         },
     }
 });
