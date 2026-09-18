@@ -69,6 +69,12 @@ const ProductSlice = createSlice({
         incrementPage: (state) => {
             state.filters.page += 1;
         },
+        resetPage: (state) => {
+            state.filters.page = 1;
+        },
+        setProductsSearch:(state, action) => {
+            state.filters = {...state.filters,search:action.payload}
+        }
     }
 });
 

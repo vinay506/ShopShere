@@ -1,9 +1,10 @@
-import { useEffect, useRef } from "react"
+import { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux";
-import { FETCH_PRODUCTS, FETCH_MORE_PRODUCTS, type IProduct } from "../../features/products/products.slice";
+import { FETCH_PRODUCTS, FETCH_MORE_PRODUCTS, ProductActions, type IProduct } from "../../features/products/products.slice";
 import { selectProducts, selectProductTotal, selectProductLoading } from "../../features/products/productSelector";
-import { Card, CardContent, Typography } from "@mui/material";
+import { Card, CardContent, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { useVirtualizer } from "@tanstack/react-virtual";
+import { useDebounce } from "../../hooks/useDebounce";
 
 const Products = () => {
   const dispatch = useDispatch();
@@ -11,6 +12,8 @@ const Products = () => {
   const total = useSelector(selectProductTotal);
   const loading = useSelector(selectProductLoading);
   const parentRef = useRef<HTMLDivElement>(null);
+  const debounce = useDebounce(300)
+  const [catagory, setCatagory] = useState();
 
   useEffect(() => {
     dispatch({ type: FETCH_PRODUCTS });
@@ -33,10 +36,31 @@ const Products = () => {
     dispatch({ type: FETCH_MORE_PRODUCTS });
   }, [virtualItems, products.length, total, loading, dispatch]);
 
+  function fetchProducts(){
+    dispatch(ProductActions.resetPage());
+    dispatch({ type: FETCH_PRODUCTS });
+  }
+
   return (
     <div className="flex flex-col items-center h-screen p-4">
-      <h1 className="text-4xl font-bold mb-4">Products</h1>
-      <p className="text-lg text-gray-600 mb-4">Welcome to the products page!</p>
+
+
+      <TextField id="filled-basic" label="Search for Products" variant="filled"
+       onChange={(e)=>{
+            dispatch(ProductActions.setProductsSearch(e.target.value))
+            dispatch(ProductActions.resetPage())
+            debounce(fetchProducts)
+      }} />
+      {/* <Select
+        labelId="demo-simple-select-label"
+        id="demo-simple-select"
+        value={catagory}
+        label="Catagory"
+        onChange={handleChange}
+      >
+        <MenuItem value={10}>Ten</MenuItem>
+       
+      </Select> */}
 
       <div
         ref={parentRef}

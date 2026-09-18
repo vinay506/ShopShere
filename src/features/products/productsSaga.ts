@@ -1,6 +1,6 @@
 import { fetchProductsAPI } from "../../api/endPoints";
 import { FETCH_PRODUCTS, FETCH_MORE_PRODUCTS, ProductActions } from "./products.slice";
-import { call, put, select, takeLatest, takeEvery, all, delay } from 'redux-saga/effects';
+import { call, put, select, takeLatest, delay } from 'redux-saga/effects';
 import type { PayloadAction } from "@reduxjs/toolkit";
 
 function* fetchProductsSaga(action: PayloadAction<{ debounce?: boolean }>) {
